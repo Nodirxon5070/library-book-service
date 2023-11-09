@@ -17,11 +17,14 @@ import java.time.LocalDateTime;
 public class BooksRequestDto {
     @NotBlank(message = "Name cannot be null or empty!")
     private String name;
-    private Integer authorId;
+    @NotNull(message = "Language id cannot be null or empty")
     private Integer languageId;
+    @NotNull(message = "Author id cannot be null or empty")
+    private Integer authorId;
     private Integer imageId;
     private Integer orderBookId;
 
+    @NotNull(message = "Publisher id cannot be null or empty")
     private Integer publisherId;
     @NotNull(message = "Price cannot be null or empty!")
     private Float price;

@@ -9,10 +9,17 @@ public class Constants {
                  "code":"0",
                  "message":"OK",
                  "data": {
-                    "loadId": "Value ...",
-                    "customerId": "Value ...",
-                    "amount": "Value ...",
-                    "status": "Value ..."
+                    "bookId": "Value ...",
+                    "name": "Value ...",
+                    "authorId": "Value ...",
+                    "languageId": "Value ...",
+                    "imageId": "Value ...",
+                    "orderBookId": "Value ..."
+                    "publisherId": "Value ..."
+                    "price": "Value ..."
+                    "page": "Value ..."
+                    "amount": "Value ..."
+                    "published": "Value ..."
                  }
             }
             """;
@@ -32,10 +39,14 @@ public class Constants {
                  "code":"0",
                  "message":"OK",
                  "data": {
-                    "loadId": "Value ...",
-                    "customerId": "Value ...",
-                    "amount": "Value ...",
-                    "status": "Value ..."
+                    "authorId": "Value ...",
+                    "firstName": "Value ...",
+                    "lastName": "Value ...",
+                    "age": "Value ..."
+                    "books": "Value ..."
+                    "createdAt": "Value ..."
+                    "updatedAt": "Value ..."
+                    "deletedAt": "Value ..."
                  }
             }
             """;
