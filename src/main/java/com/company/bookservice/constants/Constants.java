@@ -29,7 +29,7 @@ public class Constants {
             {
                  "success":"false",
                  "code":"-1",
-                 "message":"Borrower with  :: id is not found"
+                 "message":"Book with  :: id is not found"
             }
             """;
 
@@ -56,7 +56,7 @@ public class Constants {
             {
                  "success":"false",
                  "code":"-1",
-                 "message":"Borrower with  :: id is not found"
+                 "message":"Author with  :: id is not found"
             }
             """;
 
