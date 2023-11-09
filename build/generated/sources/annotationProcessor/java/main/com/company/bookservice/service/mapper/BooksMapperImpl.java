@@ -1,7 +1,8 @@
 package com.company.bookservice.service.mapper;
 
-import com.company.bookservice.dto.BooksDto;
-import com.company.bookservice.dto.BooksDto.BooksDtoBuilder;
+import com.company.bookservice.dto.request.BooksRequestDto;
+import com.company.bookservice.dto.response.BooksResponseDto;
+import com.company.bookservice.dto.response.BooksResponseDto.BooksResponseDtoBuilder;
 import com.company.bookservice.modul.Books;
 import com.company.bookservice.modul.Books.BooksBuilder;
 import javax.annotation.processing.Generated;
@@ -9,14 +10,14 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2023-10-19T14:37:39+0500",
+    date = "2023-11-09T16:59:41+0500",
     comments = "version: 1.4.2.Final, compiler: IncrementalProcessingEnvironment from gradle-language-java-8.3.jar, environment: Java 20.0.2 (Oracle Corporation)"
 )
 @Component
 public class BooksMapperImpl extends BooksMapper {
 
     @Override
-    public Books toEntity(BooksDto dto) {
+    public Books toEntity(BooksRequestDto dto) {
         if ( dto == null ) {
             return null;
         }
@@ -38,51 +39,51 @@ public class BooksMapperImpl extends BooksMapper {
     }
 
     @Override
-    public BooksDto toDtoNotAuthor(Books books) {
+    public BooksResponseDto toDtoNotAuthor(Books books) {
         if ( books == null ) {
             return null;
         }
 
-        BooksDtoBuilder booksDto = BooksDto.builder();
+        BooksResponseDtoBuilder booksResponseDto = BooksResponseDto.builder();
 
-        booksDto.bookId( books.getBookId() );
-        booksDto.name( books.getName() );
-        booksDto.languageId( books.getLanguageId() );
-        booksDto.imageId( books.getImageId() );
-        booksDto.orderBookId( books.getOrderBookId() );
-        booksDto.publisherId( books.getPublisherId() );
-        booksDto.price( books.getPrice() );
-        booksDto.page( books.getPage() );
-        booksDto.amount( books.getAmount() );
-        booksDto.published( books.getPublished() );
+        booksResponseDto.bookId( books.getBookId() );
+        booksResponseDto.name( books.getName() );
+        booksResponseDto.languageId( books.getLanguageId() );
+        booksResponseDto.imageId( books.getImageId() );
+        booksResponseDto.orderBookId( books.getOrderBookId() );
+        booksResponseDto.publisherId( books.getPublisherId() );
+        booksResponseDto.price( books.getPrice() );
+        booksResponseDto.page( books.getPage() );
+        booksResponseDto.amount( books.getAmount() );
+        booksResponseDto.published( books.getPublished() );
 
-        return booksDto.build();
+        return booksResponseDto.build();
     }
 
     @Override
-    public BooksDto toDto(Books books) {
+    public BooksResponseDto toDto(Books books) {
         if ( books == null ) {
             return null;
         }
 
-        BooksDtoBuilder booksDto = BooksDto.builder();
+        BooksResponseDtoBuilder booksResponseDto = BooksResponseDto.builder();
 
-        booksDto.name( books.getName() );
-        booksDto.authorId( books.getAuthorId() );
-        booksDto.languageId( books.getLanguageId() );
-        booksDto.imageId( books.getImageId() );
-        booksDto.orderBookId( books.getOrderBookId() );
-        booksDto.publisherId( books.getPublisherId() );
-        booksDto.price( books.getPrice() );
-        booksDto.page( books.getPage() );
-        booksDto.amount( books.getAmount() );
-        booksDto.published( books.getPublished() );
+        booksResponseDto.name( books.getName() );
+        booksResponseDto.authorId( books.getAuthorId() );
+        booksResponseDto.languageId( books.getLanguageId() );
+        booksResponseDto.imageId( books.getImageId() );
+        booksResponseDto.orderBookId( books.getOrderBookId() );
+        booksResponseDto.publisherId( books.getPublisherId() );
+        booksResponseDto.price( books.getPrice() );
+        booksResponseDto.page( books.getPage() );
+        booksResponseDto.amount( books.getAmount() );
+        booksResponseDto.published( books.getPublished() );
 
-        return booksDto.build();
+        return booksResponseDto.build();
     }
 
     @Override
-    public Books updateBooksFromDto(BooksDto dto, Books Books) {
+    public Books updateBooksFromDto(BooksRequestDto dto, Books Books) {
         if ( dto == null ) {
             return null;
         }

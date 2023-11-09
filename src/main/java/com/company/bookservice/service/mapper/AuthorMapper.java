@@ -1,6 +1,8 @@
 package com.company.bookservice.service.mapper;
 
 import com.company.bookservice.dto.AuthorDto;
+import com.company.bookservice.dto.request.AuthorRequestDto;
+import com.company.bookservice.dto.response.AuthorResponseDto;
 import com.company.bookservice.modul.Author;
 import org.mapstruct.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,20 +19,14 @@ public abstract class AuthorMapper {
 
 
     @Mapping(target = "books",ignore = true)
-    public abstract AuthorDto toDto(Author author);
-    @Mapping(target ="createdAt",ignore = true )
-    @Mapping(target ="updatedAt",ignore = true )
-    @Mapping(target ="deletedAt",ignore = true )
-    public abstract Author toEntity(AuthorDto authorDto);
+    public abstract AuthorResponseDto toDto(Author author);
+    public abstract Author toEntity(AuthorRequestDto authorDto);
 
-    @Mapping(target ="createdAt",ignore = true )
-    @Mapping(target ="updatedAt",ignore = true )
-    @Mapping(target ="deletedAt",ignore = true )
-    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    public abstract void updateAuthorFromDto(AuthorDto dto,@MappingTarget Author author);
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE,resultType = Author.class)
+    public abstract Author updateAuthorFromDto(AuthorRequestDto dto,@MappingTarget Author author);
 
     @Mapping(target = "books",expression = "java(author.getBooks().stream().map(this.booksMapper::toDtoNotAuthor).collect(Collectors.toSet()))")
-    public abstract AuthorDto toDtoWithBooks(Author author);
+    public abstract AuthorResponseDto toDtoWithBooks(Author author);
 
 
 

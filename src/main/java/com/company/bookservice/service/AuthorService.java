@@ -1,13 +1,15 @@
 package com.company.bookservice.service;
 
-import com.company.bookservice.dto.AuthorDto;
 import com.company.bookservice.dto.ResponseDto;
 import com.company.bookservice.dto.SimpleCRUD;
+import com.company.bookservice.dto.request.AuthorRequestDto;
+import com.company.bookservice.dto.response.AuthorResponseDto;
 import com.company.bookservice.modul.Author;
 import com.company.bookservice.repository.AuthorRepository;
 import com.company.bookservice.service.mapper.AuthorMapper;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -16,78 +18,72 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class AuthorService implements SimpleCRUD<Integer, AuthorDto> {
+public class AuthorService {
     private final AuthorRepository authorRepository;
     private final AuthorMapper authorMapper;
 
-    @Override
-    public ResponseDto<AuthorDto> create(@Valid AuthorDto dto) {
+    public ResponseDto<AuthorResponseDto> create(@Valid AuthorRequestDto dto) {
         try {
             Author author = this.authorMapper.toEntity(dto);
             this.authorRepository.save(author);
-            return ResponseDto.<AuthorDto>builder()
+            return ResponseDto.<AuthorResponseDto>builder()
                     .message("ok")
                     .success(true)
                     .data(this.authorMapper.toDto(author))
                     .build();
         } catch (Exception e) {
 
-            return ResponseDto.<AuthorDto>builder()
+            return ResponseDto.<AuthorResponseDto>builder()
                     .message(String.format("Author save while error %s", e.getMessage()))
                     .code(-2)
                     .build();
         }
     }
 
-    @Override
-    public ResponseDto<AuthorDto> get(@Valid Integer entityId) {
+    public ResponseDto<AuthorResponseDto> get(@Valid Integer entityId) {
         Optional<Author> optional = this.authorRepository.findByAuthorIdAndDeletedAtIsNull(entityId);
         if (optional.isEmpty()) {
-            return ResponseDto.<AuthorDto>builder()
+            return ResponseDto.<AuthorResponseDto>builder()
                     .code(-1)
                     .message("author is not found")
                     .build();
         }
-        return ResponseDto.<AuthorDto>builder()
+        return ResponseDto.<AuthorResponseDto>builder()
                 .message("ok")
                 .success(true)
                 .data(this.authorMapper.toDtoWithBooks(optional.get()))
                 .build();
     }
 
-    @Override
-    public ResponseDto<AuthorDto> update(@Valid Integer entityId, AuthorDto dto) {
-        Optional<Author> optional = this.authorRepository.findByAuthorIdAndDeletedAtIsNull(entityId);
-        if (optional.isEmpty()) {
-            return ResponseDto.<AuthorDto>builder()
-                    .message("author is not found")
-                    .code(-1)
-                    .build();
-        }
+    public ResponseDto<AuthorResponseDto> update(@Valid Integer entityId, AuthorRequestDto dto) {
         try {
-            Author author = optional.get();
-            this.authorMapper.updateAuthorFromDto(dto, author);
-            this.authorRepository.save(author);
-            author.setUpdatedAt(LocalDateTime.now());
-            return ResponseDto.<AuthorDto>builder()
-                    .message("OK")
-                    .data(this.authorMapper.toDto(author))
-                    .success(true)
-                    .build();
-        } catch (Exception e) {
-            return ResponseDto.<AuthorDto>builder()
-                    .message(String.format("author save while error %s", e.getMessage()))
+            return this.authorRepository.findByAuthorIdAndDeletedAtIsNull(entityId)
+                    .map(author -> {
+                        this.authorMapper.updateAuthorFromDto(dto,author);
+                        author.setUpdatedAt(LocalDateTime.now());
+                        this.authorRepository.save(author);
+                        return ResponseDto.<AuthorResponseDto>builder()
+                                .success(true)
+                                .message("OK")
+                                .data(this.authorMapper.toDto(author))
+                                .build();
+                    }).orElse(ResponseDto.<AuthorResponseDto>builder()
+                            .code(-1)
+                            .message(String.format("Author with %d :: id is not found",entityId))
+                            .build());
+        }catch (Exception e){
+           return ResponseDto.<AuthorResponseDto>builder()
                     .code(-2)
+                    .message(String.format("Author while updating error :: %s",e.getMessage()))
                     .build();
         }
 
     }
 
-    @Override
-    public ResponseDto<AuthorDto> delete(@Valid Integer entityId) {
+    public ResponseDto<AuthorResponseDto> delete(@Valid Integer entityId) {
         Optional<Author> optional = this.authorRepository.findByAuthorIdAndDeletedAtIsNull(entityId);
         if (optional.isEmpty()) {
-            return ResponseDto.<AuthorDto>builder()
+            return ResponseDto.<AuthorResponseDto>builder()
                     .message("Author is not found")
                     .code(-2)
                     .build();
@@ -95,7 +91,7 @@ public class AuthorService implements SimpleCRUD<Integer, AuthorDto> {
         Author author = optional.get();
         this.authorRepository.save(author);
         author.setDeletedAt(LocalDateTime.now());
-        return ResponseDto.<AuthorDto>builder()
+        return ResponseDto.<AuthorResponseDto>builder()
                 .message("OK")
                 .success(true)
                 .data(this.authorMapper.toDto(author))
@@ -103,15 +99,15 @@ public class AuthorService implements SimpleCRUD<Integer, AuthorDto> {
     }
 
 
-    public ResponseDto<List<AuthorDto>> getAllAuthors(){
+    public ResponseDto<List<AuthorResponseDto>> getAllAuthors(){
         List<Author> list = this.authorRepository.findAllByDeletedAtIsNull();
         if (list.isEmpty()) {
-            return ResponseDto.<List<AuthorDto>>builder()
+            return ResponseDto.<List<AuthorResponseDto>>builder()
                     .code(-1)
                     .message("Authors are not found!")
                     .build();
         }
-        return ResponseDto.<List<AuthorDto>>builder()
+        return ResponseDto.<List<AuthorResponseDto>>builder()
                 .success(true)
                 .message("OK")
                 .data(list.stream().map(this.authorMapper::toDto).toList())

@@ -3,6 +3,8 @@ package com.company.bookservice.controller;
 import com.company.bookservice.dto.AuthorDto;
 import com.company.bookservice.dto.ResponseDto;
 import com.company.bookservice.dto.SimpleCRUD;
+import com.company.bookservice.dto.request.AuthorRequestDto;
+import com.company.bookservice.dto.response.AuthorResponseDto;
 import com.company.bookservice.service.AuthorService;
 import com.company.bookservice.service.mapper.AuthorMapper;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
@@ -11,36 +13,25 @@ import io.swagger.v3.oas.annotations.info.Contact;
 import io.swagger.v3.oas.annotations.info.Info;
 import io.swagger.v3.oas.annotations.info.License;
 import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.servers.Server;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import static com.company.bookservice.constants.Constants.*;
+import static com.company.bookservice.constants.SimpleResponseDto.convertStatusCodeByData;
 
-@OpenAPIDefinition(
-        tags = @Tag(name = "Author tag"),
-        info = @Info(
-                version = "v: 3.0.2",
-                title = "Library Project",
-                description = "Making changes on Author class",
-                contact = @Contact(
-                        name = "Library Project",
-                        url = "https://t.me/xan_5070",
-                        email = "nodirxon5070@gmail.com"
-                ),
-                license = @License(
-                        name = "Library Project License",
-                        url = "https://t.me/xan_5070"
-                )
-        ),
-        servers = {@Server(url = "localhost:8081")}
-)
+
 @RestController
 @RequestMapping(value = "author")
 public record AuthorController(AuthorService authorService,
-                               AuthorMapper authorMapper) implements SimpleCRUD<Integer, AuthorDto> {
+                               AuthorMapper authorMapper) implements SimpleCRUD<Integer, AuthorResponseDto, AuthorRequestDto> {
     @Override
     @Operation(
             method = "Post",
@@ -52,9 +43,42 @@ public record AuthorController(AuthorService authorService,
     )
     )
     )
+    @ApiResponses(value={
+            @ApiResponse(
+                    responseCode = "200",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    examples = @ExampleObject(value = EXAMPLE_AUTHOR_SUCCESS)
+                            )
+                    }
+
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    examples = @ExampleObject(value = EXAMPLE_AUTHOR_NOT_FOUND)
+                            )
+                    }
+
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    examples = @ExampleObject(value = EXAMPLE_AUTHOR_NOT_FOUND)
+                            )
+                    }
+
+            )
+
+    })
     @PostMapping(value = "/create")
-    public ResponseDto<AuthorDto> create(@RequestBody AuthorDto dto) {
-        return this.authorService.create(dto);
+    public ResponseEntity<ResponseDto<AuthorResponseDto>> create(@RequestBody AuthorRequestDto dto) {
+        return convertStatusCodeByData(this.authorService.create(dto));
     }
 
 
@@ -69,10 +93,43 @@ public record AuthorController(AuthorService authorService,
                     )
             )
     )
-    @GetMapping(value = "/get/{id}")
-    public ResponseDto<AuthorDto> get(@PathVariable(value = "id") Integer entityId) {
+    @ApiResponses(value={
+            @ApiResponse(
+                    responseCode = "200",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    examples = @ExampleObject(value = EXAMPLE_AUTHOR_SUCCESS)
+                            )
+                    }
 
-        return this.authorService.get(entityId);
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    examples = @ExampleObject(value = EXAMPLE_AUTHOR_NOT_FOUND)
+                            )
+                    }
+
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    examples = @ExampleObject(value = EXAMPLE_AUTHOR_NOT_FOUND)
+                            )
+                    }
+
+            )
+
+    })
+    @GetMapping(value = "/get/{id}")
+    public ResponseEntity<ResponseDto<AuthorResponseDto>> get(@PathVariable(value = "id") Integer entityId) {
+
+        return convertStatusCodeByData(this.authorService.get(entityId));
     }
 
     @Override
@@ -86,10 +143,43 @@ public record AuthorController(AuthorService authorService,
                     )
             )
     )
+    @ApiResponses(value={
+            @ApiResponse(
+                    responseCode = "200",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    examples = @ExampleObject(value = EXAMPLE_AUTHOR_SUCCESS)
+                            )
+                    }
+
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    examples = @ExampleObject(value = EXAMPLE_AUTHOR_NOT_FOUND)
+                            )
+                    }
+
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    examples = @ExampleObject(value = EXAMPLE_AUTHOR_NOT_FOUND)
+                            )
+                    }
+
+            )
+
+    })
     @PutMapping(value = "/update/{id}")
-    public ResponseDto<AuthorDto> update(@PathVariable(value = "id") Integer entityId,
-                                         @RequestBody AuthorDto dto) {
-        return this.authorService.update(entityId, dto);
+    public ResponseEntity<ResponseDto<AuthorResponseDto>> update(@PathVariable(value = "id") Integer entityId,
+                                         @RequestBody AuthorRequestDto dto) {
+        return convertStatusCodeByData(this.authorService.update(entityId, dto));
     }
 
     @Override
@@ -103,12 +193,45 @@ public record AuthorController(AuthorService authorService,
                     )
             )
     )
+    @ApiResponses(value={
+            @ApiResponse(
+                    responseCode = "200",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    examples = @ExampleObject(value = EXAMPLE_AUTHOR_SUCCESS)
+                            )
+                    }
+
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    examples = @ExampleObject(value = EXAMPLE_AUTHOR_NOT_FOUND)
+                            )
+                    }
+
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    examples = @ExampleObject(value = EXAMPLE_AUTHOR_NOT_FOUND)
+                            )
+                    }
+
+            )
+
+    })
     @DeleteMapping(value = "/delete/{id}")
-    public ResponseDto<AuthorDto> delete(@PathVariable(value = "id") Integer entityId) {
-        return this.authorService.delete(entityId);
+    public ResponseEntity<ResponseDto<AuthorResponseDto>> delete(@PathVariable(value = "id") Integer entityId) {
+        return convertStatusCodeByData(this.authorService.delete(entityId));
     }
     @GetMapping(value = "/get-all-authors")
-    public ResponseDto<List<AuthorDto>> getAllAuthors(){
-        return this.authorService.getAllAuthors();
+    public ResponseEntity<ResponseDto<List<AuthorResponseDto>>> getAllAuthors(){
+        return convertStatusCodeByData(this.authorService.getAllAuthors());
     }
 }

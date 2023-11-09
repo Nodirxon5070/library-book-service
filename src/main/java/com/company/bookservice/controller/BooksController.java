@@ -4,6 +4,8 @@ package com.company.bookservice.controller;
 import com.company.bookservice.dto.BooksDto;
 import com.company.bookservice.dto.ResponseDto;
 import com.company.bookservice.dto.SimpleCRUD;
+import com.company.bookservice.dto.request.BooksRequestDto;
+import com.company.bookservice.dto.response.BooksResponseDto;
 import com.company.bookservice.service.BooksService;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.Operation;
@@ -11,33 +13,25 @@ import io.swagger.v3.oas.annotations.info.Contact;
 import io.swagger.v3.oas.annotations.info.Info;
 import io.swagger.v3.oas.annotations.info.License;
 import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@OpenAPIDefinition(
-        tags = @Tag(name = "Books tag",
-        description = "Control your Books"),
-        info = @Info(title = "Library Project",
-        version = "3.0.9",
-        description = "Making changes on Books class",
-        contact = @Contact(
-                name = "Library Project",
-                url = "https://t.me/xan_5070",
-                email = "nodirxon5070@gmail.com"),
-                license = @License(
-                        name = "Library license",
-                        url = "https://t.me/xan_5070"
-                )
+import static com.company.bookservice.constants.Constants.EXAMPLE_BOOK_NOT_FOUND;
+import static com.company.bookservice.constants.Constants.EXAMPLE_BOOK_SUCCESS;
+import static com.company.bookservice.constants.SimpleResponseDto.convertStatusCodeByData;
 
-        )
-)
+
 @RestController
 @RequestMapping(value = "books")
 @RequiredArgsConstructor
-public class BooksController implements SimpleCRUD<Integer,BooksDto> {
+public class BooksController implements SimpleCRUD<Integer, BooksResponseDto, BooksRequestDto> {
 
 
     private final BooksService booksService;
@@ -53,9 +47,42 @@ public class BooksController implements SimpleCRUD<Integer,BooksDto> {
                     )
             )
     )
+    @ApiResponses(value={
+            @ApiResponse(
+                    responseCode = "200",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    examples = @ExampleObject(value = EXAMPLE_BOOK_SUCCESS)
+                            )
+                    }
+
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    examples = @ExampleObject(value = EXAMPLE_BOOK_NOT_FOUND)
+                            )
+                    }
+
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    examples = @ExampleObject(value = EXAMPLE_BOOK_NOT_FOUND)
+                            )
+                    }
+
+            )
+
+    })
     @PostMapping(value = "/create")
-    public ResponseDto<BooksDto> create(@Valid @RequestBody BooksDto dto) {
-        return this.booksService.create(dto);
+    public ResponseEntity<ResponseDto<BooksResponseDto>> create(@Valid @RequestBody BooksRequestDto dto) {
+        return convertStatusCodeByData(this.booksService.create(dto));
     }
 
     @Override
@@ -69,9 +96,42 @@ public class BooksController implements SimpleCRUD<Integer,BooksDto> {
                     )
             )
     )
+    @ApiResponses(value={
+            @ApiResponse(
+                    responseCode = "200",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    examples = @ExampleObject(value = EXAMPLE_BOOK_SUCCESS)
+                            )
+                    }
+
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    examples = @ExampleObject(value = EXAMPLE_BOOK_NOT_FOUND)
+                            )
+                    }
+
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    examples = @ExampleObject(value = EXAMPLE_BOOK_NOT_FOUND)
+                            )
+                    }
+
+            )
+
+    })
     @GetMapping(value = "/get/{id}")
-    public ResponseDto<BooksDto> get(@PathVariable(value = "id") Integer id) {
-        return this.booksService.get(id);
+    public ResponseEntity<ResponseDto<BooksResponseDto>> get(@PathVariable(value = "id") Integer id) {
+        return convertStatusCodeByData(this.booksService.get(id));
     }
 
     @Override
@@ -85,9 +145,42 @@ public class BooksController implements SimpleCRUD<Integer,BooksDto> {
                     )
             )
     )
+    @ApiResponses(value={
+            @ApiResponse(
+                    responseCode = "200",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    examples = @ExampleObject(value = EXAMPLE_BOOK_SUCCESS)
+                            )
+                    }
+
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    examples = @ExampleObject(value = EXAMPLE_BOOK_NOT_FOUND)
+                            )
+                    }
+
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    examples = @ExampleObject(value = EXAMPLE_BOOK_NOT_FOUND)
+                            )
+                    }
+
+            )
+
+    })
     @PutMapping(value = "/update/{id}")
-    public ResponseDto<BooksDto> update(@PathVariable(value = "id") Integer entityId,@RequestBody BooksDto dto) {
-        return this.booksService.update(entityId,dto);
+    public ResponseEntity<ResponseDto<BooksResponseDto>> update(@PathVariable(value = "id") Integer entityId,@RequestBody BooksRequestDto dto) {
+        return convertStatusCodeByData(this.booksService.update(entityId,dto));
     }
 
     @Override
@@ -101,9 +194,42 @@ public class BooksController implements SimpleCRUD<Integer,BooksDto> {
                     )
             )
     )
+    @ApiResponses(value={
+            @ApiResponse(
+                    responseCode = "200",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    examples = @ExampleObject(value = EXAMPLE_BOOK_SUCCESS)
+                            )
+                    }
+
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    examples = @ExampleObject(value = EXAMPLE_BOOK_NOT_FOUND)
+                            )
+                    }
+
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    examples = @ExampleObject(value = EXAMPLE_BOOK_NOT_FOUND)
+                            )
+                    }
+
+            )
+
+    })
     @DeleteMapping(value = "/delete/{id}")
-    public ResponseDto<BooksDto> delete(@PathVariable(value = "id") Integer entityId) {
-        return this.booksService.delete(entityId);
+    public ResponseEntity<ResponseDto<BooksResponseDto>> delete(@PathVariable(value = "id") Integer entityId) {
+        return convertStatusCodeByData(this.booksService.delete(entityId));
     }
 
 }
